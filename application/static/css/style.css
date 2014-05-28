@@ -1,0 +1,375 @@
+html, body {height: 100%;}
+#bottom, #push {height:60px;}
+#footer {height:60px;}
+.footer > hr {
+    margin: 20px 0;
+}
+#wrap {
+    min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -60px;
+}
+
+#wrap > #container {
+    padding-top: 0px;
+}
+
+body{
+    padding-top:0;
+}
+
+.loader {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    url('../i/ajax-loader.gif')
+    50% 50%
+    no-repeat;
+}
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .loader {
+    display: block;
+}
+
+.container-fluid > hr {
+    margin: 10px 0;
+}
+
+.form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 70px auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}
+
+/* Form customizations */
+form.icon {
+    display: inline;
+}
+
+form.icon button {
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    padding: 0;
+    line-height: normal;
+}
+
+a.icon {
+    text-decoration: none;
+}
+
+.table caption {
+    font-size: 19px;
+    text-align: left;
+}
+
+/* Typeahead */
+
+span.twitter-typeahead {
+    display: inline !important;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border: 1px solid transparent;
+    border-radius:4px;
+}
+
+.typeahead {
+  background-color: #fff;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097cf;
+}
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-dropdown-menu {
+  width: 422px;
+  margin-top: 0;
+  padding: 4px 0;
+  background-color: #fff;
+  /*border: 1px solid #ccc;*/
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 10px;
+  /*font-size: 18px;*/
+  /*line-height: 24px;*/
+  cursor: pointer;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+/* CSS# TreeView */
+
+/*
+ * CSS3 Treeview. No JavaScript
+ * @version 1.0
+ * @author Martin Ivanov
+ * @url developer's website: http://wemakesites.net/
+ * @url developer's twitter: https://twitter.com/#!/wemakesitesnet
+ * @url developer's blog http://acidmartin.wordpress.com/
+ **/
+
+/*
+ * This solution works with all modern browsers and Internet Explorer 9+.
+ * If you are interested in purchasing a JavaScript enabler for IE8
+ * for the CSS3 Treeview, please, check this link:
+ * http://experiments.wemakesites.net/miscellaneous/acidjs-css3-treeview/
+ **/
+
+.css-treeview ul,
+.css-treeview li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.css-treeview input.group {
+    position: absolute;
+    display: none;
+}
+
+.css-treeview {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    z-index: 100;
+    margin-top: 8px;
+}
+
+.css-treeview input.leaf {
+    cursor: pointer;
+}
+
+.css-treeview input.group + label + ul {
+    margin-left: 18px;
+}
+
+.css-treeview input.group ~ ul {
+    display: none;
+}
+
+.css-treeview label.group:hover,
+.css-treeview label.leaf:hover,
+.css-treeview a.leaf:hover {
+    background-color: mediumseagreen;
+    color: lightyellow;
+}
+
+.css-treeview label.group,
+.css-treeview label.leaf,
+.css-treeview a.leaf,
+.css-treeview label.group::before {
+    cursor: pointer;
+    vertical-align: middle;
+    font-weight: normal;
+    border-radius: 2px;
+}
+
+.css-treeview input.group:disabled + label.group {
+    cursor: default;
+    opacity: .6;
+}
+
+.css-treeview input.group:checked:not(:disabled) ~ ul {
+    display: block;
+}
+
+.css-treeview label.group::before {
+    background: url("/static/i/tree-icons.png") no-repeat;
+    display: inline-block;
+    height: 16px;
+}
+
+.css-treeview label.group::before {
+    content: "";
+    width: 16px;
+    margin: 0 2px 0 0;
+    vertical-align: middle;
+    background-position: 0 -32px;
+}
+
+.css-treeview input.group:checked + label.group::before {
+    background-position: 0 -16px;
+}
+
+/* webkit adjacent element selector bugfix */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .css-treeview {
+        -webkit-animation: webkit-adjacent-element-selector-bugfix infinite 1s;
+    }
+
+    @-webkit-keyframes webkit-adjacent-element-selector-bugfix {
+        from {
+            padding: 0;
+        } to {
+            padding: 0;
+        }
+    }
+}
+
+.scrolled-tree {
+    height: 100%;
+    overflow-y: auto;
+    max-height: 500px;
+    min-height: 250px;
+}
+
+.scrolled-tree.popup {
+    display: none;
+    position: absolute;
+}
+
+.btn-gray {
+  color: #333333;
+  background-color: #999999;
+  border-color: #cccccc;
+}
+.btn-gray:hover,
+.btn-gray:focus,
+.btn-gray:active,
+.btn-gray.active,
+.open .dropdown-toggle.btn-gray {
+  color: #666666;
+  background-color: #ebebeb;
+  border-color: #adadad;
+}
+
+.nav > li > a {
+    cursor: pointer;
+}
+
+div.select2-container {
+    display: block !important;
+    /*width: 100%;*/
+    /*min-width: 250px;*/
+}
+
+.marginal {
+    margin-bottom: 20px;
+}
+
+.nomarpad {
+    margin: 0px;
+    padding: 0px;
+}
+
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.action-property-name-field {
+    width: 16%;
+}
+
+.ng-ckeditor {
+    border:0 none
+}
+
+table.table-clickable tbody tr {
+    cursor: pointer;
+}
+
+.popupable {
+    display: block;
+    position: absolute;
+    z-index: 10;
+    margin-top: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.ui-treeview ul,
+.ui-treeview li {
+    padding: 0;
+    margin: 0 0 3px;
+    list-style: none;
+}
+
+.ui-treeview li > ul {
+    margin-left: 24px;
+}
+
+.ui-treeview div.tree-label {
+    background: url("/static/i/tree-icons.png") no-repeat;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.ui-treeview div.tree-label.leaf {
+
+}
+.ui-treeview div.tree-label.expanded {
+    background-position: 0 -16px;
+}
+.ui-treeview div.tree-label.collapsed {
+    background-position: 0 -32px;
+}

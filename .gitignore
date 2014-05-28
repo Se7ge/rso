@@ -11,13 +11,13 @@ env/
 bin/
 build/
 develop-eggs/
-dist/
 eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
+.idea/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -52,3 +52,4 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+config_local.py
