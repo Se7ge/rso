@@ -1,22 +1,188 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    {% include '_header.html' %}
-    {% block modules_css %}{% endblock %}
-  </head>
-  <body>
-  <div id="wrap">
-  {% include '_top.html' %}
-  <div id="container" class="container">
-    {% block content %}
-      <!-- Jumbotron -->
-      <div class="jumbotron"><h2>Добро пожаловать!</h2></div>
-      {% endblock %}
-   </div> <!-- /container -->
-   <div id="push"></div>
-  </div>
-  {% include '_bottom.html' %}
-  {% include '_footer.html' %}
-  {% block modules_js %}{% endblock %}
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<legend>
+    <p>Организации <a class="btn btn-sm btn-success" href="edit.html" title="Добавить организацию"><span class="glyphicon glyphicon-plus"></span></a>
+        <span class="pull-right">
+            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#formModal" title="Форма КСВ"><span class="glyphicon glyphicon-th"></span> КСВ</a>
+            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#formModal" title="Форма Члены"><span class="glyphicon glyphicon-th"></span> Члены</a>
+            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#formModal" title="Форма Исключены"><span class="glyphicon glyphicon-th"></span> Исключены</a>
+            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#formModal" title="Форма Меры"><span class="glyphicon glyphicon-th"></span> Меры</a>
+        </span>
+    </p>
+</legend>
+<div class="row">
+    <div class="table-responsive col-md-12" id="orgs">
+      <div class="well well-sm">
+        <form class="form-inline" role="form">
+            <div class="input-group">
+                <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Поиск по номеру, наименованию организации, ОГРН, ИНН">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Искать</button>
+                </span>
+            </div>
+          </form>
+          <div class="text-right" id="show_filters"><small class="glyphicon glyphicon-arrow-left"></small> <a href="#" class="btn-link" onclick="show_filters();"> Расширенные фильтры</a></div>
+          <div class="text-right hide" id="hide_filters"><a href="#" class="btn-link" onclick="hide_filters();"> Скрыть фильтры</a> <small class="glyphicon glyphicon-arrow-right"></small></div>
+      </div>
+      {% if organisations %}
+      <table class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>№</th>
+                <th>НП</th>
+                <th>РО</th>
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>ОГРН</th>
+                <th>Контакты</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for organisation in organisations %}
+            <tr>
+                <td><a href="edit.html" title="Редактировать" class="btn btn-success btn-sm"><i class=" glyphicon glyphicon-pencil"></i></a></td>
+                <td>{{ organisation.fnum }}</td>
+                <td>П</td>
+                <td>П</td>
+                <td>{{ organisation.fopforg }} {{ organisation.fnamefull }}</td>
+                <td>{{ organisation.finn }}</td>
+                <td>{{ organisation.fogrn }}</td>
+                <td id="780">
+                    <a href="#">Конашенков Павел Николаевич, Нужин Денис Сергеевич</a>
+                    <script>
+                        $(document).ready(function(){
+                            $('#780 > a').popover({
+                                html: true,
+                                placement: 'left',
+                                trigger: 'manual',
+                                title: 'Контакты',
+                                content: '<address>' +
+                                        '<strong>Конашенков Павел Николаевич</strong><br>' +
+                                        '8(812)363-09-30<br>' +
+                                        '<a href="mailto:#">first.last@example.com</a>' +
+                                        '</address>' +
+                                        '<address>' +
+                                        '<strong>Нужин Денис Сергеевич</strong><br>' +
+                                        '8(812)363-09-30<br>' +
+                                        '<a href="mailto:#">nuzhin@geo-sz.ru</a>' +
+                                        '</address>'
+                            }).click(function(e) {
+                                $(this).popover('toggle');
+                                e.stopPropagation();
+                            });
+                            $('html').click(function(e) {
+                                $('#780 > a').popover('hide');
+                            });
+                        });
+
+                    </script>
+                </td>
+                <td><a href="#" title="Удалить организацию" data-toggle="modal" data-target="#delModal" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+    <div class="col-md-3 hide" id="filters">
+        <form>
+            <div class="panel panel-default">
+                <div class="panel-heading">Фильтры <button class="close" type="button" onclick="hide_filters();">×</button></div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <label>РО</label>
+                          <div class="">
+                              <label  class="checkbox-inline">
+                                <input type="checkbox"> С
+                              </label>
+                              <label  class="checkbox-inline">
+                                <input type="checkbox"> П
+                              </label>
+                              <label  class="checkbox-inline">
+                                <input type="checkbox"> И
+                              </label>
+                              <label  class="checkbox-inline">
+                                <input type="checkbox"> Э
+                              </label>
+                              <label  class="checkbox-inline">
+                                <input type="checkbox"> Ж
+                              </label>
+                          </div>
+                    </li>
+                    <li class="list-group-item">
+                        <label>Состояние в РО</label><br>
+                        <select class="form-control input-sm">
+                            <option>- не выбрано -</option>
+                            <option>актив</option>
+                            <option>приём</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item">
+                        <label>ОПФ</label><br>
+                        <select class="form-control input-sm">
+                            <option>- не выбрано -</option>
+                            <option>ООО</option>
+                            <option>ЗАО</option>
+                            <option>ОАО</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item">
+                        <label>Свидетельство</label>
+                        <input type="text" class="form-control input-sm" id="" placeholder="Номер">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm datepicker" placeholder="Начало">
+                                    <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm datepicker" placeholder="Выдан">
+                                    <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                         <input type="text" class="form-control input-sm" placeholder="Адрес сайта"><br>
+                         <input type="text" class="form-control input-sm" placeholder="Email">
+                    </li>
+                    <li class="list-group-item">
+                         <label>Контакты</label>
+                         <input type="text" class="form-control input-sm" placeholder="Контактное лицо"><br>
+                         <input type="text" class="form-control input-sm" placeholder="Посредник">
+                    </li>
+                  </ul>
+                <div class="panel-body">
+                      <button type="submit" class="btn btn-primary btn-block">Фильтровать</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block modules_js %}
+<script>
+$(function() {
+$( ".datepicker" ).datepicker();
+});
+function hide_filters(){
+    $('#filters').addClass('hide');
+    $('#orgs').addClass('col-md-12').removeClass('col-md-9');
+    $('#hide_filters').addClass('hide');
+    $('#show_filters').removeClass('hide');
+
+}
+function show_filters(){
+    $('#filters').removeClass('hide');
+    $('#orgs').addClass('col-md-9').removeClass('col-md-12');
+    $('#hide_filters').removeClass('hide');
+    $('#show_filters').addClass('hide');
+
+}
+</script>
+{% endblock %}

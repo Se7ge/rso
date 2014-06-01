@@ -11,9 +11,9 @@ from flask.ext.principal import identity_loaded, Permission, RoleNeed, UserNeed,
 from flask.ext.login import login_user, logout_user, login_required, current_user
 
 from application.app import app, db, login_manager
+from application.models import Config, OldExcel
 from application.context_processors import general_menu
-from .lib.utils import public_endpoint, jsonify, roles, permissions
-from application.models import actions
+from .lib.utils import public_endpoint
 from lib.user import UserAuth
 from forms import LoginForm
 
@@ -32,11 +32,10 @@ def check_valid_login():
         return redirect(url_for('login', next=url_for(request.endpoint)))
 
 
-# @roles.personal.require()
-# @permissions.adm.require()
 @app.route('/')
 def index():
-    return render_template('index.html')
+    organisations = db.session.query(OldExcel).group_by(OldExcel.fnumorg).order_by(OldExcel.fnumorg).limit(20).all()
+    return render_template('index.html', organisations=organisations)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -72,19 +71,6 @@ def logout():
     return redirect(request.args.get('next') or '/')
 
 
-@app.route('/api/rb/')
-@app.route('/api/rb/<name>')
-@public_endpoint
-def api_refbook(name):
-    from application.models import exists, schedule
-
-    for mod in (exists, schedule, actions):
-        if hasattr(mod, name):
-            ref_book = getattr(mod, name)
-            return jsonify(ref_book.query.order_by(ref_book.id).all())
-    return abort(404)
-
-
 @app.errorhandler(403)
 def authorisation_failed(e):
     flash(u'У вас недостаточно привилегий для доступа к функционалу')
@@ -104,15 +90,3 @@ def on_identity_loaded(sender, identity):
     # Set the identity user object
     if identity.id:
         identity.user = load_user(identity.id)
-
-        # Add the UserNeed to the identity
-        if hasattr(identity.user, 'id'):
-            identity.provides.add(UserNeed(identity.user.id))
-
-        # Assuming the User model has a list of roles, update the
-        # identity with the roles that the user provides
-        if hasattr(identity.user, 'user_profiles'):
-            for role in identity.user.user_profiles:
-                identity.provides.add(RoleNeed(role.code))
-                for right in getattr(role, 'rights', []):
-                    identity.provides.add(ActionNeed(right.code))

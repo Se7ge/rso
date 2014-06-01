@@ -1,15 +1,70 @@
 <div class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
-        <ul class="nav navbar-nav" id="cur_modules">
-            <li>
-                <div class="btn-group">
-                    <a class="btn btn-sm btn-default navbar-btn" href="/" title="Главная страница"><span class="glyphicon glyphicon-home"></span></a>
-                    {% for item in main_menu -%}
-                        <a class="btn btn-sm btn-default navbar-btn{% if request.blueprint == item.module %} active{% endif %}" href="{{ url_for(item.module + '.index') }}" title="{{ item.name }}">{{ item.name }}</a>
-                    {% endfor %}
-                </div>
-            </li>
-        </ul>
+        <div class="btn-group">
+            <ul class="nav navbar-nav" id="cur_modules">
+                <li>
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-default navbar-btn" href="/" title="Главная страница"><span class="glyphicon glyphicon-home"></span></a>
+                        {% for item in main_menu -%}
+                            <a class="btn btn-sm btn-default navbar-btn{% if request.blueprint == item.module %} active{% endif %}" href="{{ url_for(item.module + '.index') }}" title="{{ item.name }}">{{ item.name }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" title="Отчёты">Отчёты <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#" data-toggle="modal" data-target="#formModal">План проверок (Excel)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Результаты проверок (Excel)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Перечень исключенных (Excel)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Повестка ДК (Excel)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Номера телефонов (Excel)</a></li>
+                <li class="divider"></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Конструктор (Excel)</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Конверты/открытки</li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Конверт уведомления (Word)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Евроконверт (окошко) (Word)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Конверт с логотипом (Word)</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#formModal">Поздравительная открытка (Word)</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Просмотр логов (Форма)</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Кто работает с программой (Форма)</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" title="Справочники">Справочники <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">ОПФ</a></li>
+                <li><a href="#">Виды работ</a></li>
+                <li><a href="#">Сотрудники</a></li>
+                <li><a href="#">Посредники</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" title="Работа с сайтами">Работа с сайтами <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Выгрузка файлов на сайт</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Новости</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Выгрузка базы данных для сайта</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Удалить каталоги для сайта</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" title="Реестр почтовый">Реестр почтовый <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </div>
         <ul class="nav navbar-nav pull-right">
             {% if current_user %}
             <li>
@@ -18,7 +73,10 @@
             {% endif %}
             <li>
                 <div class="btn-group">
-                    <a id="logout" class="btn btn-small btn-default navbar-btn" href="{{ url_for('logout') }}" title="Выйти"><span class="glyphicon glyphicon-log-out"></span></a>
+                    <a id="help" class="btn btn-sm btn-default navbar-btn" href="#" title="Справка"><span class="glyphicon glyphicon-question-sign"></span></a>
+                </div>
+                <div class="btn-group">
+                    <a id="logout" class="btn btn-sm btn-default navbar-btn" href="{{ url_for('logout') }}" title="Выйти"><span class="glyphicon glyphicon-log-out"></span></a>
                 </div>
             </li>
         </ul>

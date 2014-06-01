@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru" ng-app="WebMis20">
-<head>
-    {%- include '_header.html' -%}
-    {%- block modules_css %}{% endblock -%}
-</head>
-<body>
-<div id="wrap">
-    {% include '_top.html' %}
-    <div id="container" class="container-fluid">
-        {%- block content %}{% endblock -%}
-    </div><!-- /#container -->
-    <div id="push"></div>
-</div><!-- /#wrap -->
-{% include '_bottom.html' -%}
-{% include '_footer.html' with context -%}
-{%- block modules_js %}{% endblock -%}
-</body>
+<html lang="ru">
+    <head>
+        {%- include '_header.html' -%}
+        {%- block modules_css %}{% endblock -%}
+    </head>
+    <body>
+    <div id="wrap">
+        {% include '_top.html' %}
+        <div id="container" class="container-fluid">
+            {%- block content %}{% endblock -%}
+        </div><!-- /#container -->
+        <div id="push"></div>
+    </div><!-- /#wrap -->
+    {% include '_bottom.html' -%}
+    {% include '_footer.html' with context -%}
+    {%- block modules_js %}{% endblock -%}
+    </body>
 </html>
