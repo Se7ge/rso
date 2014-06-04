@@ -5,6 +5,7 @@
         {%- block modules_css %}{% endblock -%}
     </head>
     <body>
+    {% from "_macros.html" import render_pagination %}
     <div id="wrap">
         {% include '_top.html' %}
         <div id="container" class="container-fluid">

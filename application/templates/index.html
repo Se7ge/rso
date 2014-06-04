@@ -13,9 +13,9 @@
 <div class="row">
     <div class="table-responsive col-md-12" id="orgs">
       <div class="well well-sm">
-        <form class="form-inline" role="form">
+        <form class="form-inline" role="form" action="{{ url_for('index') }}" method="get">
             <div class="input-group">
-                <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Поиск по номеру, наименованию организации, ОГРН, ИНН">
+                <input type="text" name="q" class="form-control" id="exampleInputPassword2" placeholder="Поиск по номеру, наименованию организации, ОГРН, ИНН"{% if request.args['q'] %} value="{{ request.args['q'] }}"{% endif %}>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Искать</button>
                 </span>
@@ -35,55 +35,27 @@
                 <th>Наименование</th>
                 <th>ИНН</th>
                 <th>ОГРН</th>
-                <th>Контакты</th>
+                <th>Руководитель</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {% for organisation in organisations %}
+            {% for organisation in organisations.items %}
             <tr>
                 <td><a href="edit.html" title="Редактировать" class="btn btn-success btn-sm"><i class=" glyphicon glyphicon-pencil"></i></a></td>
-                <td>{{ organisation.fnum }}</td>
-                <td>П</td>
-                <td>П</td>
+                <td>{{ organisation.fnumorg }}</td>
+                <td>{{ organisation.froall }}</td>
+                <td>{{ organisation.froshortnametro }}</td>
                 <td>{{ organisation.fopforg }} {{ organisation.fnamefull }}</td>
                 <td>{{ organisation.finn }}</td>
                 <td>{{ organisation.fogrn }}</td>
-                <td id="780">
-                    <a href="#">Конашенков Павел Николаевич, Нужин Денис Сергеевич</a>
-                    <script>
-                        $(document).ready(function(){
-                            $('#780 > a').popover({
-                                html: true,
-                                placement: 'left',
-                                trigger: 'manual',
-                                title: 'Контакты',
-                                content: '<address>' +
-                                        '<strong>Конашенков Павел Николаевич</strong><br>' +
-                                        '8(812)363-09-30<br>' +
-                                        '<a href="mailto:#">first.last@example.com</a>' +
-                                        '</address>' +
-                                        '<address>' +
-                                        '<strong>Нужин Денис Сергеевич</strong><br>' +
-                                        '8(812)363-09-30<br>' +
-                                        '<a href="mailto:#">nuzhin@geo-sz.ru</a>' +
-                                        '</address>'
-                            }).click(function(e) {
-                                $(this).popover('toggle');
-                                e.stopPropagation();
-                            });
-                            $('html').click(function(e) {
-                                $('#780 > a').popover('hide');
-                            });
-                        });
-
-                    </script>
-                </td>
+                <td id="780">{{ organisation.fgendir }}</td>
                 <td><a href="#" title="Удалить организацию" data-toggle="modal" data-target="#delModal" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>
             {% endfor %}
         </tbody>
       </table>
+      {{ render_pagination(organisations, 'index', request.args) }}
       {% endif %}
     </div>
     <div class="col-md-3 hide" id="filters">

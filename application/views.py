@@ -18,6 +18,8 @@ from lib.user import UserAuth
 from forms import LoginForm
 
 
+ROWS_PER_PAGE = 20
+
 login_manager.login_view = 'login'
 
 
@@ -32,9 +34,20 @@ def check_valid_login():
         return redirect(url_for('login', next=url_for(request.endpoint)))
 
 
-@app.route('/')
-def index():
-    organisations = db.session.query(OldExcel).group_by(OldExcel.fnumorg).order_by(OldExcel.fnumorg).limit(20).all()
+@app.route('/', defaults={'page': 1})
+@app.route('/page/<int:page>/')
+def index(page):
+    organisations = OldExcel.query
+    if 'q' in request.args:
+        query = request.args['q']
+        organisations = organisations.filter(
+            db.or_(
+                OldExcel.fnamefull.like(u'%{0}%'.format(query)),
+                OldExcel.fnumorg.like(u'{0}%'.format(query)),
+                OldExcel.fogrn.like(u'{0}%'.format(query)),
+                OldExcel.finn.like(u'{0}%'.format(query))))
+    organisations = organisations.group_by(OldExcel.fnumorg).order_by(OldExcel.fnumorg)
+    organisations = organisations.paginate(page, ROWS_PER_PAGE)
     return render_template('index.html', organisations=organisations)
 
 
