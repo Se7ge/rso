@@ -36,13 +36,13 @@
                 <th>ИНН</th>
                 <th>ОГРН</th>
                 <th>Руководитель</th>
-                <th></th>
+{#                <th></th>#}
             </tr>
         </thead>
         <tbody>
             {% for organisation in organisations.items %}
             <tr>
-                <td><a href="edit.html" title="Редактировать" class="btn btn-success btn-sm"><i class=" glyphicon glyphicon-pencil"></i></a></td>
+                <td><a href="{{ url_for('edit', fnum=organisation.fnum) }}" title="Редактировать" class="btn btn-success btn-sm"><i class=" glyphicon glyphicon-pencil"></i></a></td>
                 <td>{{ organisation.fnumorg }}</td>
                 <td>{{ organisation.froall }}</td>
                 <td>{{ organisation.froshortnametro }}</td>
@@ -50,7 +50,7 @@
                 <td>{{ organisation.finn }}</td>
                 <td>{{ organisation.fogrn }}</td>
                 <td id="780">{{ organisation.fgendir }}</td>
-                <td><a href="#" title="Удалить организацию" data-toggle="modal" data-target="#delModal" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>
+{#                <td><a href="#" title="Удалить организацию" data-toggle="modal" data-target="#delModal" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>#}
             </tr>
             {% endfor %}
         </tbody>
