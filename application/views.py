@@ -37,7 +37,7 @@ def check_valid_login():
 @app.route('/', defaults={'page': 1})
 @app.route('/page/<int:page>/')
 def index(page):
-    organisations = OldExcel.query
+    organisations = OldExcel.query.filter(OldExcel.fmarkfordel == 0)
     if 'q' in request.args:
         query = request.args['q']
         organisations = organisations.filter(
@@ -49,6 +49,12 @@ def index(page):
     organisations = organisations.group_by(OldExcel.fnumorg).order_by(OldExcel.fnumorg)
     organisations = organisations.paginate(page, ROWS_PER_PAGE)
     return render_template('index.html', organisations=organisations)
+
+
+@app.route('/edit/<int:fnum>/')
+def edit(fnum):
+    organisation = db.session.query(OldExcel).get(fnum)
+    return render_template('edit.html', organisation=organisation)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
