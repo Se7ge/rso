@@ -13,7 +13,7 @@ from flask.ext.login import login_user, logout_user, login_required, current_use
 from application.app import app, db, login_manager
 from application.models import Config, OldExcel
 from application.context_processors import general_menu
-from .lib.utils import public_endpoint
+from application.lib.utils import public_endpoint
 from lib.user import UserAuth
 from forms import LoginForm
 
