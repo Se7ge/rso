@@ -11,7 +11,7 @@ from flask.ext.principal import identity_loaded, Permission, RoleNeed, UserNeed,
 from flask.ext.login import login_user, logout_user, login_required, current_user
 
 from application.app import app, db, login_manager
-from application.models import Config, OldExcel
+from application.old_models import OldExcel
 from application.context_processors import general_menu
 from application.lib.utils import public_endpoint
 from lib.user import UserAuth
