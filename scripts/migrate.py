@@ -84,6 +84,40 @@ def _migrate_work_types():
             db.session.rollback()
 
 
+def __get_work_type(code, ro_id):
+    return WorkType.query.filter(db.and_(WorkType.code == code, WorkType.ro_id == ro_id)).first()
+
+
+def __get_work_type_category(code):
+    return WorkTypeCategory.query.filter(WorkTypeCategory.code == code).first()
+
+
+def _migrate_work_types_relations():
+    data = (db.session.query(Trebovaniya.fnum, Trebovaniya.fkatobj, Trebovaniya.fnumvidrab, Trebovaniya.fro, Trebovaniya.fblockrow)
+            .filter(Trebovaniya.fkatobj != '')
+            .all())
+    for old in data:
+        fnum, fkatobj, fnumvidrab, fro, fblockrow = old
+        work_type = __get_work_type(fnumvidrab, fro)
+        if not work_type:
+            print 'Error find work_type ({0}, {1})'.format(fnumvidrab, fro)
+            continue
+        work_type_category = __get_work_type_category(fkatobj)
+        if not work_type_category:
+            print 'Error find work_type_category ({0})'.format(fkatobj)
+            continue
+        obj = WorkTypeRelations()
+        obj.id = fnum
+        obj.work_type_id = work_type.id
+        obj.category_id = work_type_category.id
+        db.session.add(obj)
+        try:
+            db.session.commit()
+        except Exception, e:
+            print e
+            db.session.rollback()
+
+
 def _migrate_user_config():
     data = ConfigOLD.query.all()
     for old in data:
@@ -107,6 +141,7 @@ def migrate_dicts():
     _migrate_ro()
     _migrate_work_type_categories()
     _migrate_work_types()
+    _migrate_work_types_relations()
     _migrate_user_config()
 
 
