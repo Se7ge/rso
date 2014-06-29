@@ -105,7 +105,7 @@ class Organisation(db.Model):
     __tablename__ = 'organisation'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    fro = db.Column(db.Text, nullable=False)  # ?
+    ro_id = db.Column(db.Integer, db.ForeignKey(RO.id), nullable=False)
     status_id = db.Column(db.Integer, db.ForeignKey(ROStatus.id), index=True, nullable=True)
     opf_id = db.Column(db.Integer, db.ForeignKey(Opf.id), index=True)
     name = db.Column(db.Unicode(256), nullable=False)
@@ -118,12 +118,12 @@ class Organisation(db.Model):
     contact = db.Column(db.UnicodeText, nullable=False)
     addr_site_post = db.Column(db.UnicodeText)
     site = db.Column(db.Unicode(128))
-    email = db.Column(db.UnicodeText)
-    posrednik = db.Column(db.UnicodeText, nullable=True)
-    posrednik2 = db.Column(db.UnicodeText, nullable=True)  # TODO: объеденить с posrednik и вынести в отд. табл.
-    papkugot = db.Column(db.UnicodeText, nullable=True)
+    email = db.Column(db.Unicode(128))
+    posrednik_id = db.Column(db.Integer, db.ForeignKey(OrganisationPosrednik.id), nullable=True, index=True)
+    # posrednik2 = db.Column(db.UnicodeText, nullable=True)  # TODO: объеденить с posrednik и вынести в отд. табл.
+    prepare_case_id = db.Column(db.Integer, db.ForeignKey(OrganisationPrepareCase), nullable=True, index=True)
     dolg_doc = db.Column(db.UnicodeText, nullable=True)
-    specialist = db.Column(db.UnicodeText, nullable=True)
+    specialist = db.Column(db.Unicode(256), nullable=True)
     narush = db.Column(db.UnicodeText, nullable=True)
     sved_dop_iskl_partn = db.Column(db.UnicodeText, nullable=True)
     iskl_chl_partn = db.Column(db.Date)
@@ -157,7 +157,11 @@ class Organisation(db.Model):
 
     moderniz = db.Column(db.UnicodeText, nullable=True)
 
+    ro = db.relationship(RO)
+    opf = db.relationship(Opf)
     ro_status = db.relationship(ROStatus)
+    posrednik = db.relationship(OrganisationPosrednik)
+    prepare_case = db.relationship(OrganisationPrepareCase)
     check_period = db.relationship(
         'OrganisationChecking',
         primaryjoin='and_(Organisation.id==OrganisationChecking.organisation_id, '
@@ -170,12 +174,27 @@ class Organisation(db.Model):
     ro_all = db.relationship(ROAll)
 
 
-class SvidDopuska(db.Model):
-    __tablename__ = 'svid_dopuska'
+class OrganisationPosrednik(db.Model):
+    __tablename__ = 'organisation_posrednik'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Unicode(128))
+
+
+class OrganisationPrepareCase(db.Model):
+    __tablename__ = 'organisation_prepare_case'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Unicode(256))
+
+
+class OrganisationSvidDopuska(db.Model):
+    __tablename__ = 'organisation_svid_dopuska'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     organisation_id = db.Column(db.Integer, db.ForeignKey(Organisation.id), index=True)
-    name = db.Column(db.Unicode(64))
+    name = db.Column(db.Unicode(128))
+    is_archive = db.Column(db.Boolean, default=False)
 
     organisation = db.relationship(Organisation, backref=db.backref('svid_dopuska'), lazy=False)
 
@@ -185,14 +204,14 @@ class KSV(db.Column):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     organisation_id = db.Column(db.Integer, db.ForeignKey(Organisation.id), index=True)
-    uved_ksv = db.Column(db.UnicodeText)
-    otmetka_vruch_ksv = db.Column(db.UnicodeText)
+    uved = db.Column(db.UnicodeText)
+    otmetka_vruch = db.Column(db.UnicodeText)
 
     comment = db.Column(db.UnicodeText, nullable=False)
     control = db.Column(db.Date)
     status = db.Column(db.UnicodeText, nullable=False)
     narush = db.Column(db.UnicodeText, nullable=False)
-    resul_tproverki = db.Column(db.UnicodeText, nullable=False)
+    result_proverki = db.Column(db.UnicodeText, nullable=False)
     peredacha_dk = db.Column(db.Date)
     recommendation_dk = db.Column(db.UnicodeText, nullable=False)
 
