@@ -258,6 +258,37 @@ def __set_kk(organisation_id, old):
         db.session.commit()
 
 
+def __set_dk(organisation_id, old):
+    if (old.fdatepereddk or
+            old.fdeloorgdk or
+            old.fdatezaseddk or
+            old.fdatezaseddkarch or
+            old.fuveddk or
+            old.fotmvruchdk or
+            old.fprotdk or
+            old.fotmvruchdk2 or
+            old.fsostdk or
+            old.frekomenddk or
+            old.fdkkomment or
+            old.fdkcontrol):
+        obj = DK()
+        obj.organisation_id = organisation_id
+        obj.date_pered = old.fdatepereddk
+        obj.delo_org = old.fdeloorgdk
+        obj.date_zased = old.fdatezaseddk
+        obj.date_zased_arch = old.fdatezaseddkarch
+        obj.uved = old.fuveddk
+        obj.otm_vruch = old.fotmvruchdk
+        obj.protocol = old.fprotdk
+        obj.otm_vruch2 = old.fotmvruchdk2
+        obj.status = old.fsostdk
+        obj.recommendation_dk = old.frekomenddk
+        obj.comment = old.fdkkomment
+        obj.control = old.fdkcontrol
+        db.session.add(obj)
+        db.session.commit()
+
+
 def __get_posrednik(posrednik):
     if not posrednik:
         return None
@@ -338,6 +369,16 @@ def _migrate_actual_orgs():
             obj.dolg_doc = old.fdolgdocum
             obj.narush = old.fnarush
             obj.sved_dop_iskl_partn = old.fnarush
+            obj.comments = old.fcomments
+            obj.osob_otmetki = old.fosobotmetki
+            obj.jalobi = old.fjalobi
+            obj.vid_zayavlen = old.fvidzayavlen
+            obj.date_zayavlen = old.fdatezayavlen
+            obj.pered_sp = old.fperedsp
+            obj.osn_izm_chl_partn = old.fosnizmchlpartn
+            obj.svid_begin_date = old.fbegindatesvid
+            obj.prekr_svid_date = old.fprekrsvid
+            obj.iskl_chl_partn = old.fisklchlpartn
 
             obj.idTimeStamp = old.fidTimeStamp
             db.session.add(obj)
@@ -347,6 +388,7 @@ def _migrate_actual_orgs():
             __set_svid_dopuska(obj.id, old.fsviddopuskarch, True)
             __set_ksv(obj.id, old)
             __set_kk(obj.id, old)
+            __set_dk(obj.id, old)
 
             # TODO:
             __set_org_check_period()
