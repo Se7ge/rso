@@ -101,6 +101,20 @@ class OrganisationChecking(db.Model):
     period = db.relationship('CheckPeriod')
 
 
+class OrganisationPosrednik(db.Model):
+    __tablename__ = 'organisation_posrednik'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Unicode(128))
+
+
+class OrganisationPrepareCase(db.Model):
+    __tablename__ = 'organisation_prepare_case'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Unicode(256))
+
+
 class Organisation(db.Model):
     __tablename__ = 'organisation'
 
@@ -120,8 +134,9 @@ class Organisation(db.Model):
     site = db.Column(db.Unicode(128))
     email = db.Column(db.Unicode(128))
     posrednik_id = db.Column(db.Integer, db.ForeignKey(OrganisationPosrednik.id), nullable=True, index=True)
+    posrednik2_id = db.Column(db.Integer, db.ForeignKey(OrganisationPosrednik.id), nullable=True, index=True)
     # posrednik2 = db.Column(db.UnicodeText, nullable=True)  # TODO: объеденить с posrednik и вынести в отд. табл.
-    prepare_case_id = db.Column(db.Integer, db.ForeignKey(OrganisationPrepareCase), nullable=True, index=True)
+    prepare_case_id = db.Column(db.Integer, db.ForeignKey(OrganisationPrepareCase.id), nullable=True, index=True)
     dolg_doc = db.Column(db.UnicodeText, nullable=True)
     specialist = db.Column(db.Unicode(256), nullable=True)
     narush = db.Column(db.UnicodeText, nullable=True)
@@ -147,7 +162,7 @@ class Organisation(db.Model):
     delo_org_vidano = db.Column(db.UnicodeText, nullable=True)
     vopros = db.Column(db.UnicodeText, nullable=True)
     deleted = db.Column(db.SmallInteger, server_default="0")
-    resh_desc_kom = db.Column(db.Text, nullable=True)
+    resh_desc_kom = db.Column(db.UnicodeText, nullable=True)
     edit = db.Column(db.Unicode(64), nullable=True)  # TODO: to History OR FK to user_config??
     ro_all_id = db.Column(db.Integer, db.ForeignKey(ROAll.id))
     # fronametro = db.Column(db.Text) # см. ro_status.name
@@ -160,7 +175,8 @@ class Organisation(db.Model):
     ro = db.relationship(RO)
     opf = db.relationship(Opf)
     ro_status = db.relationship(ROStatus)
-    posrednik = db.relationship(OrganisationPosrednik)
+    posrednik = db.relationship(OrganisationPosrednik, foreign_keys=[posrednik_id])
+    posrednik2 = db.relationship(OrganisationPosrednik, foreign_keys=[posrednik2_id])
     prepare_case = db.relationship(OrganisationPrepareCase)
     check_period = db.relationship(
         'OrganisationChecking',
@@ -174,18 +190,36 @@ class Organisation(db.Model):
     ro_all = db.relationship(ROAll)
 
 
-class OrganisationPosrednik(db.Model):
-    __tablename__ = 'organisation_posrednik'
+class OrganisationWorkType(db.Model):
+    __tablename__ = 'organisation_work_type'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(128))
+    organisation_id = db.Column(db.Integer, db.ForeignKey(Organisation.id), index=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('work_type_category.id'), index=True)
+    work_type_id = db.Column(db.Integer, db.ForeignKey('work_type.id'), index=True)
 
+    organisation = db.relationship(Organisation, backref=db.backref('work_types'), lazy=False)
 
-class OrganisationPrepareCase(db.Model):
-    __tablename__ = 'organisation_prepare_case'
+    organisation_iskl_opasn = db.relationship(
+        Organisation,
+        primaryjoin="and_(OrganisationWorkType.organisation_id==Organisation.id, "
+                    "OrganisationWorkType.category_id==1)",
+        backref=db.backref('work_types_iskl_opasn'),
+        innerjoin=True)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(256))
+    organisation_vkl_opasn_iskl_atom = db.relationship(
+        Organisation,
+        primaryjoin="and_(OrganisationWorkType.organisation_id==Organisation.id, "
+                    "OrganisationWorkType.category_id==2)",
+        backref=db.backref('work_types_vkl_opasn_iskl_atom'),
+        innerjoin=True)
+
+    organisation_vkl_opasn_vkl_atom = db.relationship(
+        Organisation,
+        primaryjoin="and_(OrganisationWorkType.organisation_id==Organisation.id, "
+                    "OrganisationWorkType.category_id==3)",
+        backref=db.backref('work_types_vkl_opasn_vkl_atom'),
+        innerjoin=True)
 
 
 class OrganisationSvidDopuska(db.Model):

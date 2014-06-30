@@ -177,11 +177,11 @@ def migrate_dicts():
     # _migrate_opf()
     # _migrate_ro()
     # _migrate_ro_status()
-    # _migrate_work_type_categories()
-    # _migrate_work_types()
-    # _migrate_work_types_relations()
+    _migrate_work_type_categories()
+    _migrate_work_types()
+    _migrate_work_types_relations()
     # _migrate_user_config()
-    _migrate_posrednik()
+    # _migrate_posrednik()
     pass
 
 
@@ -199,7 +199,7 @@ def __set_svid_dopuska(organisation_id, svid_dopuska, is_archive=False):
     if isinstance(svid_dopuska_list, list):
         for svid in svid_dopuska_list:
             obj = OrganisationSvidDopuska()
-            obj.name = svid
+            obj.name = svid.strip()
             obj.organisation_id = organisation_id
             obj.is_archive = is_archive
             db.session.add(obj)
@@ -289,6 +289,29 @@ def __set_dk(organisation_id, old):
         db.session.commit()
 
 
+def __set_pd(organisation_id, old):
+    if (old.fpdaktpd or
+            old.fpdkomment or
+            old.fpdcontrol or
+            old.fpdsostpd or
+            old.fpdnarush or
+            old.fpdresultproverki or
+            old.fpdperedachadk or
+            old.fpdrekomenddk):
+        obj = PD()
+        obj.organisation_id = organisation_id
+        obj.akt = old.fpdaktpd
+        obj.comment = old.fpdkomment
+        obj.control = old.fpdcontrol
+        obj.status = old.fpdsostpd
+        obj.narush = old.fpdnarush
+        obj.result_proverki = old.fpdresultproverki
+        obj.peredacha_dk = old.fpdperedachadk
+        obj.recommendation_dk = old.fpdrekomenddk
+        db.session.add(obj)
+        db.session.commit()
+
+
 def __get_posrednik(posrednik):
     if not posrednik:
         return None
@@ -325,6 +348,21 @@ def __set_org_check_period(organisation_id, period, is_archive=False):
             db.session.commit()
 
 
+def __set_work_types(organisation_id, work_types):
+    if not work_types:
+        return None
+    work_types_list = work_types.split(',')
+    if isinstance(work_types_list, list):
+        for work_type_id in work_types_list:
+            work_type = WorkTypeRelations.query.get(int(work_type_id))
+            obj = OrganisationWorkType()
+            obj.organisation_id = organisation_id
+            obj.work_type_id = work_type.work_type_id
+            obj.category_id = work_type.category_id
+            db.session.add(obj)
+            db.session.commit()
+
+
 def __get_prepare_case(prepare_case):
     if not prepare_case:
         return None
@@ -332,6 +370,18 @@ def __get_prepare_case(prepare_case):
     if not p:
         p = OrganisationPrepareCase()
         p.name = prepare_case
+        db.session.add(p)
+        db.session.commit()
+    return p
+
+
+def __get_ro_all(ro_all):
+    if not ro_all:
+        return None
+    p = ROAll.query.filter(ROAll.name == ro_all).first()
+    if not p:
+        p = ROAll()
+        p.name = ro_all
         db.session.add(p)
         db.session.commit()
     return p
@@ -361,6 +411,11 @@ def _migrate_actual_orgs():
                 if posrednik:
                     obj.posrednik_id = posrednik.id
 
+            if old.fposredn2:
+                posrednik2 = __get_posrednik(old.fposredn2)
+                if posrednik2:
+                    obj.posrednik2_id = posrednik2.id
+
             if old.fpapkugot:
                 prepare_case = __get_prepare_case(old.fpapkugot)
                 if prepare_case:
@@ -377,8 +432,21 @@ def _migrate_actual_orgs():
             obj.pered_sp = old.fperedsp
             obj.osn_izm_chl_partn = old.fosnizmchlpartn
             obj.svid_begin_date = old.fbegindatesvid
+            obj.svid_date = old.fsviddate
             obj.prekr_svid_date = old.fprekrsvid
             obj.iskl_chl_partn = old.fisklchlpartn
+            obj.zadolj_vznos = old.fzadoljvznos
+            obj.delo_org_arch = old.fdeloorgarch
+            obj.delo_org_vidano = old.fdeloorgvidano
+            obj.vopros = old.fvopros
+            obj.deleted = old.fmarkfordel
+            obj.resh_desc_kom = old.freshdesckom
+            obj.edit = old.fedit
+
+            if old.froall:
+                ro_all = __get_ro_all(old.froall)
+                if ro_all:
+                    obj.ro_all_id = ro_all.id
 
             obj.idTimeStamp = old.fidTimeStamp
             db.session.add(obj)
@@ -389,12 +457,18 @@ def _migrate_actual_orgs():
             __set_ksv(obj.id, old)
             __set_kk(obj.id, old)
             __set_dk(obj.id, old)
+            __set_pd(obj.id, old)
+
+            __set_work_types(obj.id, old.fvidrabisklopasn)
+            __set_work_types(obj.id, old.fvidrabvklopasnisklatom)
+            __set_work_types(obj.id, old.fvidrabvklopasnvklatom)
 
             # TODO:
-            __set_org_check_period()
+            __set_org_checking()
 
 
 def _migrate_history():
+    # TODO: учесть те, которых нет в актуальных. Например, добавить с флагом deleted в актуальные последнюю из истории
     pass
 
 
