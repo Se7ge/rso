@@ -2,7 +2,7 @@
 from flask.ext.login import LoginManager, current_user
 from flask.ext.principal import identity_loaded, Principal, Permission, RoleNeed, UserNeed
 from application.database import db
-from application.models import Users, Roles
+from application.models.models import Users, Roles
 from application.app import app
 
 

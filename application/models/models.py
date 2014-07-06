@@ -1,6 +1,6 @@
 # coding: utf-8
 from datetime import datetime
-from database import db
+from application.database import db
 from flask_login import UserMixin
 
 TABLE_PREFIX = 'rso'
@@ -74,7 +74,7 @@ class Opf(db.Model):
     __tablename__ = 'opf'
 
     id = db.Column(db.Integer, primary_key=True)
-    short_name = db.Column(db.Unicode(24), nullable=False)
+    name = db.Column(db.Unicode(24), nullable=False)
     long_name = db.Column(db.Unicode(128), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
@@ -90,11 +90,11 @@ class OrganisationChecking(db.Model):
     __tablename__ = 'organisation_checking'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    organisation_id = db.Column(db.Integer, db.ForeignKey('organisation.id'), nullable=False)
-    check_period_id = db.Column(db.Integer, db.ForeignKey('check_period.id'), nullable=False)
-    checking_date = db.Column(db.Date, nullable=False)
-    checking_result = db.Column(db.Unicode(256), nullable=False)
-    is_archive = db.Column(db.SmallInteger, server_default="0")
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisation.id', ondelete='CASCADE'), nullable=False)
+    check_period_id = db.Column(db.Integer, db.ForeignKey('check_period.id', ondelete='CASCADE'), nullable=False)
+    checking_date = db.Column(db.Date, nullable=True)
+    checking_result = db.Column(db.Unicode(256), nullable=True)
+    is_archive = db.Column(db.Boolean, default=False)
 
     db.UniqueConstraint('organisation_id', 'check_period_id', 'is_archive')
 
@@ -105,7 +105,7 @@ class OrganisationPosrednik(db.Model):
     __tablename__ = 'organisation_posrednik'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(128))
+    name = db.Column(db.UnicodeText)
 
 
 class OrganisationPrepareCase(db.Model):
@@ -149,24 +149,17 @@ class Organisation(db.Model):
     jalobi = db.Column(db.Date)
     vid_zayavlen = db.Column(db.Unicode(256), nullable=True)
     date_zayavlen = db.Column(db.Date)
-    # vid_rab_besop = db.Column(db.UnicodeText, nullable=True)
-    # vid_rab_iskl_opasn = db.Column(db.UnicodeText, nullable=True)
-    # vid_rab_vkl_opasn_iskl_atom = db.Column(db.UnicodeText, nullable=True)
-    # vid_rab_vkl_opasn_vkl_atom = db.Column(db.UnicodeText, nullable=True)
     pered_sp = db.Column(db.Date)
     svid_begin_date = db.Column(db.Date)
-    # vid_posl_svid_date = db.Column(db.Date)
     prekr_svid_date = db.Column(db.Date)
     zadolj_vznos = db.Column(db.UnicodeText, nullable=True)
     delo_org_arch = db.Column(db.UnicodeText, nullable=True)
     delo_org_vidano = db.Column(db.UnicodeText, nullable=True)
     vopros = db.Column(db.UnicodeText, nullable=True)
-    deleted = db.Column(db.SmallInteger, server_default="0")
+    deleted = db.Column(db.Boolean, default=False)
     resh_desc_kom = db.Column(db.UnicodeText, nullable=True)
     edit = db.Column(db.Unicode(64), nullable=True)  # TODO: to History OR FK to user_config??
     ro_all_id = db.Column(db.Integer, db.ForeignKey(ROAll.id))
-    # fronametro = db.Column(db.Text) # см. ro_status.name
-    # froshortnametro = db.Column(db.Text) # см. ro_status.short_name
     svid_date = db.Column(db.Date)
     idTimeStamp = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
@@ -233,7 +226,7 @@ class OrganisationSvidDopuska(db.Model):
     organisation = db.relationship(Organisation, backref=db.backref('svid_dopuska'), lazy=False)
 
 
-class KSV(db.Column):
+class KSV(db.Model):
     __tablename__ = 'organisation_ksv'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -252,11 +245,11 @@ class KSV(db.Column):
     organisation = db.relationship(Organisation, backref=db.backref('ksv'))
 
 
-class KK(db.Column):
+class KK(db.Model):
     __tablename__ = 'organisation_kk'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    organisation_id = db.Column(db.Integer, db.ForeignKey(Organisation.id), index=True)
+    organisation_id = db.Column(db.Integer, db.ForeignKey(Organisation.id, ondelete='CASCADE'), index=True)
     date_uved = db.Column(db.Date)
     uved = db.Column(db.UnicodeText)
     date_otprav = db.Column(db.Date)
@@ -271,7 +264,7 @@ class KK(db.Column):
     organisation = db.relationship(Organisation, backref=db.backref('kk'))
 
 
-class DK(db.Column):
+class DK(db.Model):
     __tablename__ = 'organisation_dk'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -281,11 +274,11 @@ class DK(db.Column):
     date_zased = db.Column(db.Date)
     date_zased_arch = db.Column(db.UnicodeText)
     is_archive = db.Column(db.SmallInteger, server_default="0")
-    uved = db.Column(db.Unicode)
-    otm_vruch = db.Column(db.Unicode)
-    protocol = db.Column(db.Unicode)
-    otm_vruch2 = db.Column(db.Unicode)
-    status = db.Column(db.Unicode, nullable=True)
+    uved = db.Column(db.UnicodeText)
+    otm_vruch = db.Column(db.UnicodeText)
+    protocol = db.Column(db.UnicodeText)
+    otm_vruch2 = db.Column(db.UnicodeText)
+    status = db.Column(db.Unicode(64), nullable=True)
     recommendation_dk = db.Column(db.UnicodeText, nullable=True)
     comment = db.Column(db.UnicodeText, nullable=True)
     control = db.Column(db.Date)
@@ -293,7 +286,7 @@ class DK(db.Column):
     organisation = db.relationship(Organisation, backref=db.backref('dk'))
 
 
-class PD(db.Column):
+class PD(db.Model):
     __tablename__ = 'organisation_pd'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

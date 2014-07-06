@@ -1,5 +1,5 @@
 # coding: utf-8
-from database import db
+from application.database import db
 
 
 class ConfigOLD(db.Model):

@@ -14,7 +14,8 @@ app = Flask(__name__)
 app.config.from_object(config)
 
 db.init_app(app)
-from models import *
+from models.models import *
+from models.history import *
 
 babel = Babel(app)
 

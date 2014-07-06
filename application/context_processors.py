@@ -7,7 +7,8 @@ from datetime import datetime
 
 @app.context_processor
 def copyright():
-    return dict(copy_year=datetime.now())
+    return dict(copy_year=datetime.now().year)
+
 
 @app.context_processor
 def general_menu():

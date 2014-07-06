@@ -1,18 +1,11 @@
 # -*- encoding: utf-8 -*-
-from flask import render_template, abort, request, redirect, url_for, flash, session, current_app
-from flask.views import MethodView
-
-from jinja2 import TemplateNotFound
-from wtforms import TextField, PasswordField, IntegerField
-from flask_wtf import Form
-from wtforms.validators import Required
+from flask import render_template, request, redirect, url_for, flash, session, current_app
 from flask.ext.principal import Identity, AnonymousIdentity, identity_changed
-from flask.ext.principal import identity_loaded, Permission, RoleNeed, UserNeed, ActionNeed
-from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask.ext.principal import identity_loaded
+from flask.ext.login import login_user, logout_user, current_user
 
 from application.app import app, db, login_manager
-from application.old_models import OldExcel
-from application.context_processors import general_menu
+from application.models.models import Organisation, Opf, RO, ROStatus, OrganisationPosrednik
 from application.lib.utils import public_endpoint
 from lib.user import UserAuth
 from forms import LoginForm
@@ -37,23 +30,43 @@ def check_valid_login():
 @app.route('/', defaults={'page': 1})
 @app.route('/page/<int:page>/')
 def index(page):
-    organisations = OldExcel.query.filter(OldExcel.fmarkfordel == 0)
+    organisations = Organisation.query.filter(Organisation.deleted == False)
     if 'q' in request.args:
         query = request.args['q']
-        organisations = organisations.filter(
-            db.or_(
-                OldExcel.fnamefull.like(u'%{0}%'.format(query)),
-                OldExcel.fnumorg.like(u'{0}%'.format(query)),
-                OldExcel.fogrn.like(u'{0}%'.format(query)),
-                OldExcel.finn.like(u'{0}%'.format(query))))
-    organisations = organisations.group_by(OldExcel.fnumorg).order_by(OldExcel.fnumorg)
+        filter_or = []
+        try:
+            int_query = int(query)
+        except ValueError:
+            pass
+        else:
+            if int_query > 0:
+                filter_or.append(Organisation.id == int_query)
+        filter_or.append(Organisation.name.like(u'%{0}%'.format(query)))
+        filter_or.append(Organisation.ogrn.like(u'%{0}%'.format(query)))
+        filter_or.append(Organisation.inn.like(u'%{0}%'.format(query)))
+        organisations = organisations.filter(db.or_(*filter_or))
+    if 'ro' in request.args:
+        organisations = organisations.filter(Organisation.ro_id.in_(request.args['ro']))
+    if 'ro_status' in request.args:
+        organisations = organisations.filter(Organisation.status_id == request.args['ro_status'])
+    if 'opf' in request.args:
+        organisations = organisations.filter(Organisation.opf_id == request.args['opf'])
+    if 'posrednik' in request.args:
+        organisations = organisations.filter(db.or_(Organisation.posrednik_id == request.args['posrednik'],
+                                                    Organisation.posrednik2_id == request.args['posrednik']))
+    organisations = organisations.order_by(Organisation.id)
     organisations = organisations.paginate(page, ROWS_PER_PAGE)
-    return render_template('index.html', organisations=organisations)
+    return render_template('index.html',
+                           organisations=organisations,
+                           opf=db.session.query(Opf).all(),
+                           ro=db.session.query(RO).all(),
+                           ro_status=db.session.query(ROStatus).all(),
+                           posrednik=db.session.query(OrganisationPosrednik).all())
 
 
-@app.route('/edit/<int:fnum>/')
-def edit(fnum):
-    organisation = db.session.query(OldExcel).get(fnum)
+@app.route('/edit/<int:id>/')
+def edit(id):
+    organisation = db.session.query(Organisation).get(id)
     return render_template('edit.html', organisation=organisation)
 
 

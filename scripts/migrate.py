@@ -3,9 +3,10 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname('..'))
 
-from application.app import app, db
-from application.models import *
-from application.old_models import *
+from application.app import app
+from application.models.old import *
+from application.models.models import *
+
 
 MAPPER = {
     'field': {'table': 'table', 'field': 'field'}
@@ -31,7 +32,7 @@ def _migrate_opf():
         if not _check_by_id(Opf, opf.fnum):
             obj = Opf()
             obj.id = opf.fnum
-            obj.short_name = opf.fshortname
+            obj.name = opf.fshortname
             obj.long_name = opf.flongname
             obj.created = opf.fidTimeStamp
             db.session.add(obj)
@@ -336,16 +337,62 @@ def __get_check_period(period):
     return p
 
 
-def __set_org_check_period(organisation_id, period, is_archive=False):
-    svid_dopuska_list = svid_dopuska.split('\n')
-    if isinstance(svid_dopuska_list, list):
-        for svid in svid_dopuska_list:
-            obj = OrganisationSvidDopuska()
-            obj.name = svid
-            obj.organisation_id = organisation_id
-            obj.is_archive = is_archive
-            db.session.add(obj)
+def __get_res_prov(results, dateprov):
+    for res_prov in results:
+        if res_prov.find(dateprov) > -1:
+            return res_prov.replace(dateprov, u'').strip()
+    return None
+
+
+def __set_org_checking(organisation_id, old):
+    old_period_prov = old.fperiodprov.strip()
+    if old_period_prov:
+        per = __get_check_period(old_period_prov)
+        obj = OrganisationChecking()
+        obj.organisation_id = organisation_id
+        obj.check_period_id = per.id
+        obj.checking_date = old.fdateprov
+        db.session.add(obj)
+        try:
             db.session.commit()
+        except Exception, e:
+            print e
+            db.session.rollback()
+
+    if old.fperiodprovarch:
+        check_period_list = old.fperiodprovarch.split('\n')
+        check_dates_list = old.fdateprovarch.split('\n')
+        check_res_list = old.fresprovarch.split('\n')
+
+        if check_period_list:
+            for k, v in enumerate(check_period_list):
+                old_period_prov_arch = v.strip()
+                if old_period_prov_arch and old_period_prov != old_period_prov_arch:
+                    obj = OrganisationChecking()
+                    per_arch = __get_check_period(old_period_prov_arch)
+                    obj.organisation_id = organisation_id
+                    obj.check_period_id = per_arch.id
+                    obj.is_archive = True
+                    try:
+                        prov_date = check_dates_list[k].strip()
+                    except IndexError:
+                        print 'no {0} index in check_dates_list'.format(k)
+                    else:
+                        try:
+                            checking_date = datetime.strptime(prov_date, '%d.%m.%Y')
+                        except ValueError, e:
+                            print e
+                        else:
+                            obj.checking_date = checking_date
+                            res_prov = __get_res_prov(check_res_list, prov_date)
+                            if res_prov:
+                                obj.checking_result = res_prov
+                            db.session.add(obj)
+                            try:
+                                db.session.commit()
+                            except Exception, e:
+                                print e
+                                db.session.rollback()
 
 
 def __set_work_types(organisation_id, work_types):
@@ -387,97 +434,133 @@ def __get_ro_all(ro_all):
     return p
 
 
+def __migrate_organisation(old):
+    if old.fnumorg and not _check_by_id(Organisation, old.fnumorg):
+        obj = Organisation()
+        obj.id = old.fnumorg
+        obj.ro_id = int(old.fro)
+        obj.ro_status = __get_org_status(old.frosost)
+        obj.opf = __get_opf(old.fopforg)
+        obj.name = old.fnamefull
+        obj.inn = old.finn
+        obj.ogrn = old.fogrn
+        obj.address_place = old.faddrplace
+        obj.address_arenda = old.faddrarenda
+        obj.gendir = old.fgendir
+        obj.contact = old.fcontlico
+        obj.site = old.fwwwsite
+        obj.email = old.femail
+
+        if old.fposredn:
+            posrednik = __get_posrednik(old.fposredn)
+            if posrednik:
+                obj.posrednik_id = posrednik.id
+
+        if old.fposredn2:
+            posrednik2 = __get_posrednik(old.fposredn2)
+            if posrednik2:
+                obj.posrednik2_id = posrednik2.id
+
+        if old.fpapkugot:
+            prepare_case = __get_prepare_case(old.fpapkugot)
+            if prepare_case:
+                obj.prepare_case_id = prepare_case.id
+
+        obj.dolg_doc = old.fdolgdocum
+        obj.narush = old.fnarush
+        obj.sved_dop_iskl_partn = old.fnarush
+        obj.comments = old.fcomments
+        obj.osob_otmetki = old.fosobotmetki
+        obj.jalobi = old.fjalobi
+        obj.vid_zayavlen = old.fvidzayavlen
+        obj.date_zayavlen = old.fdatezayavlen
+        obj.pered_sp = old.fperedsp
+        obj.osn_izm_chl_partn = old.fosnizmchlpartn
+        obj.svid_begin_date = old.fbegindatesvid
+        obj.svid_date = old.fsviddate
+        obj.prekr_svid_date = old.fprekrsvid
+        obj.iskl_chl_partn = old.fisklchlpartn
+        obj.zadolj_vznos = old.fzadoljvznos
+        obj.delo_org_arch = old.fdeloorgarch
+        obj.delo_org_vidano = old.fdeloorgvidano
+        obj.vopros = old.fvopros
+        obj.deleted = old.fmarkfordel
+        obj.resh_desc_kom = old.freshdesckom
+        obj.edit = old.fedit
+        obj.deleted = bool(old.fmarkfordel)
+
+        if old.froall:
+            ro_all = __get_ro_all(old.froall)
+            if ro_all:
+                obj.ro_all_id = ro_all.id
+
+        obj.idTimeStamp = old.fidTimeStamp
+
+        try:
+            db.session.add(obj)
+            db.session.commit()
+        except Exception, e:
+            print e
+            db.session.rollback()
+        else:
+            organisation_id = obj.id
+            __set_svid_dopuska(organisation_id, old.fsviddopusk)
+            __set_svid_dopuska(organisation_id, old.fsviddopuskarch, True)
+            __set_ksv(organisation_id, old)
+            __set_kk(organisation_id, old)
+            __set_dk(organisation_id, old)
+            __set_pd(organisation_id, old)
+
+            __set_work_types(organisation_id, old.fvidrabisklopasn)
+            __set_work_types(organisation_id, old.fvidrabvklopasnisklatom)
+            __set_work_types(organisation_id, old.fvidrabvklopasnvklatom)
+
+            __set_org_checking(organisation_id, old)
+
+
+def __link_posrednik(old):
+    obj = db.session.query(Organisation).get(old.fnumorg)
+    if not obj:
+        return None
+    if old.fposredn:
+        posrednik = __get_posrednik(old.fposredn)
+        if posrednik:
+            obj.posrednik_id = posrednik.id
+
+    if old.fposredn2:
+        posrednik2 = __get_posrednik(old.fposredn2)
+        if posrednik2:
+            obj.posrednik2_id = posrednik2.id
+
+    try:
+        db.session.add(obj)
+        db.session.commit()
+    except Exception, e:
+        print e
+        db.session.rollback()
+
+
 def _migrate_actual_orgs():
     data = OldExcel.query.filter(OldExcel.fmarkfordel == 0).order_by(OldExcel.fnumorg).all()
     for old in data:
-        if not _check_by_id(Organisation, old.fnumorg):
-            obj = Organisation()
-            obj.id = old.fnumorg
-            obj.ro_id = int(old.ro)
-            obj.ro_status = __get_org_status(old.frostatus)
-            obj.opf = __get_opf(old.fopforg)
-            obj.name = old.fnamefull
-            obj.inn = old.finn
-            obj.ogrn = old.fogrn
-            obj.address_place = old.addrplace
-            obj.address_arenda = old.addrarenda
-            obj.gendir = old.gendir
-            obj.contact = old.fcontlico
-            obj.site = old.fwwwsite
-            obj.email = old.femail
-
-            if old.fposredn:
-                posrednik = __get_posrednik(old.fposredn)
-                if posrednik:
-                    obj.posrednik_id = posrednik.id
-
-            if old.fposredn2:
-                posrednik2 = __get_posrednik(old.fposredn2)
-                if posrednik2:
-                    obj.posrednik2_id = posrednik2.id
-
-            if old.fpapkugot:
-                prepare_case = __get_prepare_case(old.fpapkugot)
-                if prepare_case:
-                    obj.prepare_case_id = prepare_case.id
-
-            obj.dolg_doc = old.fdolgdocum
-            obj.narush = old.fnarush
-            obj.sved_dop_iskl_partn = old.fnarush
-            obj.comments = old.fcomments
-            obj.osob_otmetki = old.fosobotmetki
-            obj.jalobi = old.fjalobi
-            obj.vid_zayavlen = old.fvidzayavlen
-            obj.date_zayavlen = old.fdatezayavlen
-            obj.pered_sp = old.fperedsp
-            obj.osn_izm_chl_partn = old.fosnizmchlpartn
-            obj.svid_begin_date = old.fbegindatesvid
-            obj.svid_date = old.fsviddate
-            obj.prekr_svid_date = old.fprekrsvid
-            obj.iskl_chl_partn = old.fisklchlpartn
-            obj.zadolj_vznos = old.fzadoljvznos
-            obj.delo_org_arch = old.fdeloorgarch
-            obj.delo_org_vidano = old.fdeloorgvidano
-            obj.vopros = old.fvopros
-            obj.deleted = old.fmarkfordel
-            obj.resh_desc_kom = old.freshdesckom
-            obj.edit = old.fedit
-
-            if old.froall:
-                ro_all = __get_ro_all(old.froall)
-                if ro_all:
-                    obj.ro_all_id = ro_all.id
-
-            obj.idTimeStamp = old.fidTimeStamp
-            db.session.add(obj)
-            db.session.commit()
-
-            __set_svid_dopuska(obj.id, old.fsviddopusk)
-            __set_svid_dopuska(obj.id, old.fsviddopuskarch, True)
-            __set_ksv(obj.id, old)
-            __set_kk(obj.id, old)
-            __set_dk(obj.id, old)
-            __set_pd(obj.id, old)
-
-            __set_work_types(obj.id, old.fvidrabisklopasn)
-            __set_work_types(obj.id, old.fvidrabvklopasnisklatom)
-            __set_work_types(obj.id, old.fvidrabvklopasnvklatom)
-
-            # TODO:
-            __set_org_checking()
+        __migrate_organisation(old)
+        __link_posrednik(old)  # TMP
 
 
-def _migrate_history():
-    # TODO: учесть те, которых нет в актуальных. Например, добавить с флагом deleted в актуальные последнюю из истории
-    pass
+def _migrate_deleted_orgs():
+    stmt = db.session.query(db.distinct(OldExcel.fnumorg)).filter(OldExcel.fmarkfordel == 0).subquery()
+    data = OldExcel.query.filter(db.not_(OldExcel.fnumorg.in_(stmt))).order_by(OldExcel.fnumorg).all()
+    for old in data:
+        __migrate_organisation(old)
+        __link_posrednik(old)  # TMP
 
 
 def migrate_org_data():
     _migrate_actual_orgs()
-    _migrate_history()
+    _migrate_deleted_orgs()
 
 
 if __name__ == '__main__':
     with app.app_context():
-        migrate_dicts()
-        # migrate_org_data()
+        # migrate_dicts()
+        migrate_org_data()

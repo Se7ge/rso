@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from application.database import db
-from application.models import Users
+from application.models.models import Users
 import hashlib
 
 
