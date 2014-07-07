@@ -178,11 +178,11 @@ def migrate_dicts():
     # _migrate_opf()
     # _migrate_ro()
     # _migrate_ro_status()
-    _migrate_work_type_categories()
-    _migrate_work_types()
-    _migrate_work_types_relations()
+    # _migrate_work_type_categories()
+    # _migrate_work_types()
+    # _migrate_work_types_relations()
     # _migrate_user_config()
-    # _migrate_posrednik()
+    _migrate_posrednik()
     pass
 
 
@@ -438,6 +438,7 @@ def __migrate_organisation(old):
     if old.fnumorg and not _check_by_id(Organisation, old.fnumorg):
         obj = Organisation()
         obj.id = old.fnumorg
+        print obj.id
         obj.ro_id = int(old.fro)
         obj.ro_status = __get_org_status(old.frosost)
         obj.opf = __get_opf(old.fopforg)
@@ -504,8 +505,10 @@ def __migrate_organisation(old):
             db.session.rollback()
         else:
             organisation_id = obj.id
-            __set_svid_dopuska(organisation_id, old.fsviddopusk)
-            __set_svid_dopuska(organisation_id, old.fsviddopuskarch, True)
+            if old.fsviddopusk:
+                __set_svid_dopuska(organisation_id, old.fsviddopusk)
+            if old.fsviddopuskarch:
+                __set_svid_dopuska(organisation_id, old.fsviddopuskarch, True)
             __set_ksv(organisation_id, old)
             __set_kk(organisation_id, old)
             __set_dk(organisation_id, old)
@@ -562,5 +565,5 @@ def migrate_org_data():
 
 if __name__ == '__main__':
     with app.app_context():
-        # migrate_dicts()
+        migrate_dicts()
         migrate_org_data()

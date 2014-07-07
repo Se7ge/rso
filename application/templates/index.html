@@ -68,17 +68,17 @@
                           <div class="">
                               {% for item in ro %}
                               <label class="checkbox-inline">
-                                <input name="ro[]" type="checkbox" value="{{ item.id }}" {% if item.id in request.args['ro'] %}checked="checked"{% endif %}> {{ item.name }}
+                                <input name="ro" type="checkbox" value="{{ item.id }}" {% if item.id|string in request.args.getlist('ro') %}checked="checked"{% endif %}> {{ item.name }}
                               </label>
                               {% endfor %}
                           </div>
                     </li>
                     <li class="list-group-item">
                         <label>Состояние в РО</label><br>
-                        <select class="form-control input-sm">
+                        <select name="ro_status" class="form-control input-sm">
                             <option value="">- не выбрано -</option>
                             {% for item in ro_status %}
-                            <option name="ro_status" value="{{ item.id }}" {% if request.args['ro_status'] == item.id %}selected{% endif %}>{{ item.name }}</option>
+                            <option value="{{ item.id }}" {% if request.args['ro_status'] == item.id|string %}selected{% endif %}>{{ item.name }}</option>
                             {% endfor %}
                         </select>
                     </li>
@@ -87,7 +87,7 @@
                         <select name="opf" class="form-control input-sm">
                             <option value="">- не выбрано -</option>
                             {% for item in opf %}
-                            <option value="{{ item.id }}" {% if request.args['opf'] == item.id %}selected{% endif %}>{{ item.name }}</option>
+                            <option value="{{ item.id }}" {% if request.args['opf'] == item.id|string %}selected{% endif %}>{{ item.name }}</option>
                             {% endfor %}
                         </select>
                     </li>
@@ -96,7 +96,7 @@
                          <select name="posrednik" class="form-control input-sm">
                             <option value="">- не выбран -</option>
                             {% for item in posrednik %}
-                            <option value="{{ item.id }}" {% if request.args['posrednik'] == item.id %}selected{% endif %}>{{ item.name }}</option>
+                            <option value="{{ item.id }}" {% if request.args['posrednik'] == item.id|string %}selected{% endif %}>{{ item.name }}</option>
                             {% endfor %}
                         </select>
                     </li>
@@ -128,5 +128,8 @@ function show_filters(){
     $('#show_filters').addClass('hide');
 
 }
+{% if request.args and 'query' not in request.args %}
+    show_filters();
+{% endif %}
 </script>
 {% endblock %}

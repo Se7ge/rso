@@ -45,13 +45,14 @@ def index(page):
         filter_or.append(Organisation.ogrn.like(u'%{0}%'.format(query)))
         filter_or.append(Organisation.inn.like(u'%{0}%'.format(query)))
         organisations = organisations.filter(db.or_(*filter_or))
-    if 'ro' in request.args:
-        organisations = organisations.filter(Organisation.ro_id.in_(request.args['ro']))
-    if 'ro_status' in request.args:
+    ro_filter = request.args.getlist("ro")
+    if ro_filter:
+        organisations = organisations.filter(Organisation.ro_id.in_(ro_filter))
+    if 'ro_status' in request.args and request.args['ro_status']:
         organisations = organisations.filter(Organisation.status_id == request.args['ro_status'])
-    if 'opf' in request.args:
+    if 'opf' in request.args and request.args['opf']:
         organisations = organisations.filter(Organisation.opf_id == request.args['opf'])
-    if 'posrednik' in request.args:
+    if 'posrednik' in request.args and request.args['posrednik']:
         organisations = organisations.filter(db.or_(Organisation.posrednik_id == request.args['posrednik'],
                                                     Organisation.posrednik2_id == request.args['posrednik']))
     organisations = organisations.order_by(Organisation.id)

@@ -2,6 +2,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.dirname('..'))
+from application.app import app
 from application.models.history import *
 from application.models.old import *
 from application.models.models import *
@@ -197,15 +198,15 @@ def __migrate_organisation_history(old):
     if old.fnumorg:
         obj = OrganisationHistory()
         obj.organisation_id = old.fnumorg
-        obj.ro_id = int(old.ro)
+        obj.ro_id = int(old.fro)
         obj.ro_status = __get_org_status(old.frostatus)
         obj.opf = __get_opf(old.fopforg)
         obj.name = old.fnamefull
         obj.inn = old.finn
         obj.ogrn = old.fogrn
-        obj.address_place = old.addrplace
-        obj.address_arenda = old.addrarenda
-        obj.gendir = old.gendir
+        obj.address_place = old.faddrplace
+        obj.address_arenda = old.faddrarenda
+        obj.gendir = old.fgendir
         obj.contact = old.fcontlico
         obj.site = old.fwwwsite
         obj.email = old.femail
@@ -276,5 +277,7 @@ def migrate_history():
     for old in data:
         __migrate_organisation_history(old)
 
-if __name__ == 'main':
-    migrate_history()
+
+if __name__ == '__main__':
+    with app.app_context():
+        migrate_history()
