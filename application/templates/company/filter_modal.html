@@ -1,0 +1,169 @@
+<div class="modal fade" id="filterextendedModal" tabindex="-1" role="dialog" aria-labelledby="filterextendedModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="filterextendedModalLabel">Фильтровать похожие по полям</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>ИД</legend>
+                            </dt>
+                            <dt>Свидетельство</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Начало</dd>
+                            <dd><input type="checkbox"> Выдача</dd>
+                            <dd><input type="checkbox"> Прекращение</dd>
+                            <dd><input type="checkbox"> Исключение</dd>
+                            <dt>Протокол СП/ОС</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dt>Сайт, email</dt>
+                            <dd><input type="checkbox"> Адрес сайта</dd>
+                            <dd><input type="checkbox"> email</dd>
+                            <dt>Жалобы</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dt>Дело</dt>
+                            <dd><input type="checkbox"> Подготовил</dd>
+                            <dd><input type="checkbox"> Выдано</dd>
+                            <dt><input type="checkbox"> Архив</dt>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>ПД</legend>
+                            </dt>
+                            <dt>Заявление</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Передача в СП</dd>
+                            <dd><input type="checkbox"> Запрашиваемые документы</dd>
+                            <dt>Акт ПД</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Комментарии</dd>
+                            <dd><input type="checkbox"> Контроль</dd>
+                            <dt><input type="checkbox"> Состояние в ПД</dt>
+                            <dt></dt>
+                            <dd><input type="checkbox"> Нарушения</dd>
+                            <dd><input type="checkbox"> Результаты проверки</dd>
+                            <dt>Передача в ДК</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Рекомендации в ДК</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>КСВ</legend>
+                            </dt>
+                            <dt>ЧВ</dt>
+                            <dd><input type="checkbox"> Начало</dd>
+                            <dd><input type="checkbox"> Окончание</dd>
+                            <dd><input type="checkbox"> Счёт</dd>
+                            <dd><input type="checkbox"> П/П</dd>
+                            <dd><input type="checkbox"> Начислено</dd>
+                            <dd><input type="checkbox"> Получено</dd>
+                            <dd><input type="checkbox"> Задолженность</dd>
+                            <dt>Страхование</dt>
+                            <dd><input type="checkbox"> Страховая сумма</dd>
+                            <dd><input type="checkbox"> Страховщик</dd>
+                            <dd><input type="checkbox"> Состояние в страховании</dd>
+                            <dd><input type="checkbox"> Действия</dd>
+                            <dt>Уведомление КСВ</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Состояние в КСВ</dd>
+                            <dt></dt>
+                            <dd><input type="checkbox"> Нарушения</dd>
+                            <dd><input type="checkbox"> Результаты проверки</dd>
+                            <dt>Передача в ДК</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Рекомендации в ДК</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>КК</legend>
+                            </dt>
+                            <dt>Период проверки</dt>
+                            <dd><input type="checkbox"> Начало</dd>
+                            <dd><input type="checkbox"> Окончание</dd>
+                            <dd><input type="checkbox"> Проверка</dd>
+                            <dd><input type="checkbox"> Последняя проверка</dd>
+                            <dt>Уведомление КК</dt>
+                            <dd><input type="checkbox"> Дата отправки</dd>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dt>Акт КК</dt>
+                            <dd><input type="checkbox"> Дата отправки</dd>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Состояние в КК</dd>
+                            <dt></dt>
+                            <dd><input type="checkbox"> Нарушения</dd>
+                            <dd><input type="checkbox"> Результаты проверки</dd>
+                            <dt>Передача в ДК</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Рекомендации в ДК</dd>
+                            <dd><input type="checkbox"> БО</dd>
+                            <dd><input type="checkbox"> ОО</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>ДК</legend>
+                            </dt>
+                            <dt>Поступило в ДК</dt>
+                            <dd><input type="checkbox"> ПД</dd>
+                            <dd><input type="checkbox"> КСВ</dd>
+                            <dd><input type="checkbox"> КК</dd>
+                            <dt>Заседание ДК</dt>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Дата (архив)</dd>
+                            <dt>Уведомление ДК</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dd><input type="checkbox"> Состояние в ДК</dd>
+                            <dt>Протокол ДК</dt>
+                            <dd><input type="checkbox"> Номер</dd>
+                            <dd><input type="checkbox"> Дата</dd>
+                            <dt>Решение ДК</dt>
+                            <dd><input type="checkbox"> Решение ДК</dd>
+                            <dd><input type="checkbox"> Решение ДК (вручение)</dd>
+                            <dd><input type="checkbox"> Комментарии</dd>
+                            <dd><input type="checkbox"> Контроль</dd>
+                            <dt>Сведения о мерах</dt>
+                            <dd><input type="checkbox"> Сведения о мерах</dd>
+                            <dd><input type="checkbox"> Сведения о мерах (дсп)</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>
+                                <legend>Разное</legend>
+                            </dt>
+                            <dd><input type="checkbox"> Комментарии</dd>
+                            <dd><input type="checkbox"> Контроль</dd>
+                            <dd><input type="checkbox"> Вопросы</dd>
+                            <dd><input type="checkbox"> Модернизация</dd>
+                            <dd><input type="checkbox"> Резерв</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary filter" data-dismiss="modal"><span
+                        class="glyphicon glyphicon-filter"></span> Фильтровать
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

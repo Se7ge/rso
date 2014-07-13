@@ -1,8 +1,9 @@
 Flask
 SQLAlchemy
 Flask-SQLAlchemy
-wtforms==1.0.5
-Flask-WTF==0.9.3
+wtforms
+Flask-WTF
+WTForms-Alchemy
 Flask-Babel
 Flask-Admin
 pytz

@@ -152,9 +152,9 @@ def __set_org_checking(organisation_id, old):
             for k, v in enumerate(check_period_list):
                 old_period_prov_arch = v.strip()
                 if old_period_prov_arch and old_period_prov != old_period_prov_arch:
-                    obj = OrganisationChecking()
+                    obj = OrganisationCheckingHistory()
                     per_arch = __get_check_period(old_period_prov_arch)
-                    obj.organisation_id = organisation_id
+                    obj.organisation_history_id = organisation_id
                     obj.check_period_id = per_arch.id
                     obj.is_archive = True
                     try:
@@ -199,7 +199,7 @@ def __migrate_organisation_history(old):
         obj = OrganisationHistory()
         obj.organisation_id = old.fnumorg
         obj.ro_id = int(old.fro)
-        obj.ro_status = __get_org_status(old.frostatus)
+        obj.ro_status = __get_org_status(old.frosost)
         obj.opf = __get_opf(old.fopforg)
         obj.name = old.fnamefull
         obj.inn = old.finn

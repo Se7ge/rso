@@ -12,7 +12,7 @@ class OrganisationCheckingHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     organisation_history_id = db.Column(db.Integer, db.ForeignKey('organisation_history.id', ondelete='CASCADE'), nullable=False)
     check_period_id = db.Column(db.Integer, db.ForeignKey('check_period.id', ondelete='CASCADE'), nullable=False)
-    checking_date = db.Column(db.Date, nullable=False)
+    checking_date = db.Column(db.Date, nullable=True)
     checking_result = db.Column(db.Unicode(256), nullable=True)
     is_archive = db.Column(db.Boolean, default=False)
 

@@ -1,0 +1,149 @@
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-default">
+            <div class="panel-heading" id="docs">Свидетельство</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Номер</label>
+
+                    <div class="col-md-10"><input type="text" class="form-control" value="" id=""
+                                                  placeholder="Номер свидетельства"></div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Начало</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Начало">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Выдача</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Выдача">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Прекращение</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Прекращение">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Исключение</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Исключение">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" id="protocol">Протокол СП/ОС</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Номер</label>
+
+                    <div class="col-md-4"><input type="text" class="form-control" value="" id=""
+                                                 placeholder="Номер"></div>
+
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Дата</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Дата">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" id="site">Сайт, email</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Адрес сайта</label>
+
+                    <div class="col-md-4">{{ form.site(class="form-control") }}</div>
+                    <label for="exampleInputEmail1" class="col-sm-1 control-label">Email</label>
+
+                    <div class="col-md-5">{{ form.email(class="form-control") }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" id="compilants">Жалобы</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Дата</label>
+
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Дата">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" id="delo">Дело</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Подготовил</label>
+
+                    <div class="col-md-6"><input type="text" class="form-control" value="" id=""
+                                                 placeholder="Подготовил"></div>
+
+                    <label for="exampleInputEmail1" class="col-sm-1 control-label">Выдано</label>
+
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="Выдано">
+                            <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" id="archive">Архив (№ кор.)</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="col-sm-2 control-label">Архив</label>
+
+                    <div class="col-md-6"><input type="text" class="form-control" value="" id=""
+                                                 placeholder="Архив"></div>
+                </div>
+            </div>
+        </div>
+        <p></p>
+    </div>
+
+
+    <div class="col-md-2">
+        <div style="" class="bs-docs-sidebar hidden-print affix" data-spy="affix" data-offset-top="50"
+             data-offset-bottom="100" role="complementary">
+            <ul class="nav">
+                <li><a href="#docs">Свидетельство</a></li>
+                <li><a href="#protocol">Протокол СП/ОС</a></li>
+                <li><a href="#site">Сайт, email</a></li>
+                <li><a href="#compilants">Жалобы</a></li>
+                <li><a href="#delo">Дело</a></li>
+                <li><a href="#archive">Архив</a></li>
+            </ul>
+            <a class="back-to-top" href="#top">
+                Наверх
+            </a>
+        </div>
+    </div>
+</div>

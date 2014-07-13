@@ -8,7 +8,7 @@ from application.app import app, db, login_manager
 from application.models.models import Organisation, Opf, RO, ROStatus, OrganisationPosrednik
 from application.lib.utils import public_endpoint
 from lib.user import UserAuth
-from forms import LoginForm
+from forms import LoginForm, OrganisationForm
 
 
 ROWS_PER_PAGE = 20
@@ -68,7 +68,14 @@ def index(page):
 @app.route('/edit/<int:id>/')
 def edit(id):
     organisation = db.session.query(Organisation).get(id)
-    return render_template('edit.html', organisation=organisation)
+
+    form_organisation = OrganisationForm(request.form, organisation)
+    form_organisation.populate_obj(organisation)
+
+    form_organisation.opf.choices = [(item.id, item.name) for item in Opf.query.all()]
+    form_organisation.opf.data = organisation.opf_id
+
+    return render_template('edit.html', organisation=organisation, form=form_organisation)
 
 
 @app.route('/login/', methods=['GET', 'POST'])

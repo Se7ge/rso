@@ -1,0 +1,126 @@
+<div class="row">
+    <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading" id="z">Заявление</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Дата</label>
+
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control datepicker" placeholder="Дата">
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                        <label class="col-sm-2 control-label">Передача в СП</label>
+
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control datepicker" placeholder="Дата">
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Запрашиваемые документы</label>
+
+                        <div class="col-md-10"><textarea class="form-control" rows="2"></textarea></div>
+                    </div>
+                </div>
+            </div>
+            {% if form.pd.entries %}
+            <hr>
+            {% for entry in form.pd.entries %}
+            <div class="panel panel-default">
+                <div class="panel-heading" id="act_pd">Акт ПД</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Номер</label>
+
+                        <div class="col-md-6">{{ entry.form.akt(class="form-control") }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Комментарии</label>
+
+                        <div class="col-md-6">{{ entry.form.comment(class="form-control") }}</div>
+                        <label class="col-sm-1 control-label">Контроль</label>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                {{ entry.form.control(class="form-control datepicker") }}
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" id="status_pd">Состояние в ПД</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Состояние в ПД</label>
+
+                        <div class="col-md-10">{{ entry.form.status(class="form-control") }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" id="achtung">Нарушения</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Нарушения</label>
+
+                        <div class="col-md-10">{{ entry.form.narush(class="form-control") }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" id="check_res">Результаты проверки</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Результаты проверки</label>
+
+                        <div class="col-md-10">{{ entry.form.result_proverki(class="form-control") }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" id="send_dk">Передача в ДК</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Дата</label>
+
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                {{ entry.form.peredacha_dk(class="form-control datepicker") }}
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                        <label class="col-sm-2 control-label">Рекомендации в ДК</label>
+
+                        <div class="col-md-6">{{ entry.form.recommendation_dk(class="form-control") }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        <p></p>
+    </div>
+
+
+    <div class="col-md-2">
+        <div style="" class="bs-docs-sidebar hidden-print affix" data-spy="affix" data-offset-top="50"
+             data-offset-bottom="100" role="complementary">
+            <ul class="nav">
+                <li><a href="#z">Заявление</a></li>
+                <li><a href="#act_pd">Акт ПД</a></li>
+                <li><a href="#status_pd">Состояние в ПД</a></li>
+                <li><a href="#achtung">Нарушения</a></li>
+                <li><a href="#check_res">Результаты проверки</a></li>
+                <li><a href="#send_dk">Передача в ДК</a></li>
+            </ul>
+            <a class="back-to-top" href="#top">
+                Наверх
+            </a>
+        </div>
+    </div>
+</div>
