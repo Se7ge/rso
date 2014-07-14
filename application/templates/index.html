@@ -128,7 +128,7 @@ function show_filters(){
     $('#show_filters').addClass('hide');
 
 }
-{% if request.args and 'query' not in request.args %}
+{% if request.args and 'query' not in request.args and 'f' not in request.args %}
     show_filters();
 {% endif %}
 </script>

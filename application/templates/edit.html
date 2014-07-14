@@ -57,13 +57,19 @@
         $(function () {
             $(".datepicker").datepicker();
             $('input:text:not(.not-filter)').wrap('<div class="input-group"></div>');
-            $('input:text:not(.not-filter)').before('<span class="input-group-btn"><button class="btn btn-default filter" type="button" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></button></span>');
+            $('input:text:not(.not-filter)').each(
+                    function(){
+                        $(this).before('<span class="input-group-btn"><a class="btn btn-default filter" href="{{ url_for('index', id=request.view_args['id']) }}&f=' + $(this).attr('name') + '" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></a></span>');
+                    });
 
 //    $('textarea:not(.not-filter)').wrap('<div class="input-group"></div>');
-        $('textarea:not(.not-filter)').before('<button class="btn btn-default filter" type="button" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></button>');
-            $('button.filter').click(function () {
-                $('#filterModal').modal('show');
-            });
+        $('textarea:not(.not-filter)').each(
+                function() {
+                    $(this).before('<a class="btn btn-default filter" href="{{ url_for('index', id=request.view_args['id']) }}&f=' + $(this).attr('name') + '" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></a>');
+                });
+{#            $('button.filter').click(function () {#}
+{#                $('#filterModal').modal('show');#}
+{#            });#}
         });
     </script>
 {% endblock -%}

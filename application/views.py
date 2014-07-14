@@ -63,7 +63,7 @@ def index(page):
         if organisation_id and filter_fields:
             organisation = db.session.query(Organisation).get(organisation_id)
             for _filter in filter_fields:
-                organisations = organisations.filter_by(_filter == getattr(organisation, _filter))
+                organisations = organisations.filter(getattr(Organisation, _filter) == getattr(organisation, _filter))
 
 
     organisations = organisations.order_by(Organisation.id)
