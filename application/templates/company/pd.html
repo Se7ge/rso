@@ -28,25 +28,22 @@
                     </div>
                 </div>
             </div>
-            {% if form.pd.entries %}
-            <hr>
-            {% for entry in form.pd.entries %}
             <div class="panel panel-default">
                 <div class="panel-heading" id="act_pd">Акт ПД</div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Номер</label>
 
-                        <div class="col-md-6">{{ entry.form.akt(class="form-control") }}</div>
+                        <div class="col-md-6">{{ pd_form.akt(class="form-control") }}</div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Комментарии</label>
 
-                        <div class="col-md-6">{{ entry.form.comment(class="form-control") }}</div>
+                        <div class="col-md-6">{{ pd_form.comment(class="form-control") }}</div>
                         <label class="col-sm-1 control-label">Контроль</label>
                         <div class="col-md-3">
                             <div class="input-group">
-                                {{ entry.form.control(class="form-control datepicker") }}
+                                {{ pd_form.control(class="form-control datepicker") }}
                                 <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
@@ -59,7 +56,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Состояние в ПД</label>
 
-                        <div class="col-md-10">{{ entry.form.status(class="form-control") }}</div>
+                        <div class="col-md-10">{{ pd_form.status(class="form-control") }}</div>
                     </div>
                 </div>
             </div>
@@ -69,7 +66,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Нарушения</label>
 
-                        <div class="col-md-10">{{ entry.form.narush(class="form-control") }}</div>
+                        <div class="col-md-10">{{ pd_form.narush(class="form-control") }}</div>
                     </div>
                 </div>
             </div>
@@ -79,7 +76,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Результаты проверки</label>
 
-                        <div class="col-md-10">{{ entry.form.result_proverki(class="form-control") }}</div>
+                        <div class="col-md-10">{{ pd_form.result_proverki(class="form-control") }}</div>
                     </div>
                 </div>
             </div>
@@ -91,18 +88,16 @@
 
                         <div class="col-md-3">
                             <div class="input-group">
-                                {{ entry.form.peredacha_dk(class="form-control datepicker") }}
+                                {{ pd_form.peredacha_dk(class="form-control datepicker") }}
                                 <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
                         <label class="col-sm-2 control-label">Рекомендации в ДК</label>
 
-                        <div class="col-md-6">{{ entry.form.recommendation_dk(class="form-control") }}</div>
+                        <div class="col-md-6">{{ pd_form.recommendation_dk(class="form-control") }}</div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-            {% endif %}
         <p></p>
     </div>
 

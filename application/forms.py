@@ -32,7 +32,6 @@ class OrganisationForm(ModelForm):
 
     opf = SelectField(coerce=int)
     email = TextAreaField()
-    pd = ModelFieldList(FormField(PdForm))
 
 
 #----------------#

@@ -8,7 +8,7 @@ from application.app import app, db, login_manager
 from application.models.models import Organisation, Opf, RO, ROStatus, OrganisationPosrednik
 from application.lib.utils import public_endpoint
 from lib.user import UserAuth
-from forms import LoginForm, OrganisationForm
+from forms import LoginForm, OrganisationForm, PdForm
 
 
 ROWS_PER_PAGE = 20
@@ -55,6 +55,17 @@ def index(page):
     if 'posrednik' in request.args and request.args['posrednik']:
         organisations = organisations.filter(db.or_(Organisation.posrednik_id == request.args['posrednik'],
                                                     Organisation.posrednik2_id == request.args['posrednik']))
+
+    # Фильтры, пришедшие со страницы компании (имеем id компании, с которой пришли и перечень полей фильтрации)
+    if 'id' in request.args and 'f' in request.args:
+        organisation_id = int(request.args['id'])
+        filter_fields = request.args.getlist('f')
+        if organisation_id and filter_fields:
+            organisation = db.session.query(Organisation).get(organisation_id)
+            for _filter in filter_fields:
+                organisations = organisations.filter_by(_filter == getattr(organisation, _filter))
+
+
     organisations = organisations.order_by(Organisation.id)
     organisations = organisations.paginate(page, ROWS_PER_PAGE)
     return render_template('index.html',
@@ -75,7 +86,12 @@ def edit(id):
     form_organisation.opf.choices = [(item.id, item.name) for item in Opf.query.all()]
     form_organisation.opf.data = organisation.opf_id
 
-    return render_template('edit.html', organisation=organisation, form=form_organisation)
+    pd_form = PdForm(request.form, organisation.pd[0] if len(organisation.pd) else None)
+
+    return render_template('edit.html',
+                           organisation=organisation,
+                           form=form_organisation,
+                           pd_form=pd_form)
 
 
 @app.route('/login/', methods=['GET', 'POST'])

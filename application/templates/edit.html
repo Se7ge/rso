@@ -50,21 +50,6 @@
             </div>
         </div>
     </form>
-    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="formModalLabel">Переход к фильтрации</h4>
-                </div>
-                <div class="modal-body">
-                    Будет произведен переход к интерфейсу фильтрации организаций с применением фильтра, соответствующего
-                    значению выбранного поля.
-                </div>
-            </div>
-        </div>
-    </div>
     {% include 'company/filter_modal.html' %}
 {% endblock -%}
 {%- block modules_js %}
@@ -75,7 +60,7 @@
             $('input:text:not(.not-filter)').before('<span class="input-group-btn"><button class="btn btn-default filter" type="button" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></button></span>');
 
 //    $('textarea:not(.not-filter)').wrap('<div class="input-group"></div>');
-            $('textarea:not(.not-filter)').before('<button class="btn btn-default filter" type="button" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></button>');
+        $('textarea:not(.not-filter)').before('<button class="btn btn-default filter" type="button" title="Фильтровать"><span class="glyphicon glyphicon-filter"></span></button>');
             $('button.filter').click(function () {
                 $('#filterModal').modal('show');
             });
